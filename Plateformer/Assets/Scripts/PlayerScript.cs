@@ -1,46 +1,50 @@
 using System;
+using Unity.VisualScripting;
 using UnityEngine;
-[RequireComponent (typeof(CharacterController))]
 public class PlayerMovement : MonoBehaviour
 {
-    
-    [SerializeField] private float moveSpeed = 5f;
-    [SerializeField] private float jumpForce = 10f;
-    [SerializeField] private float gravity = 9.81f;
-    private float horizontalMove = 0f;
-    private Vector3 moveDirection;
-    private bool jump = false;
-    private CharacterController controller;
+    [SerializeField] private float moveSpeed;
+    private Rigidbody2D rb;
+    private bool isGrounded = false;
+    public Transform checkSol;
+    private float rayonSol = 0.3f;
+    [SerializeField] private LayerMask sol;
+
 
     private void Start()
     {
-        controller = GetComponent<CharacterController>();
+        rb = GetComponent<Rigidbody2D>();
+        
     }
+
+
+    private void FixedUpdate()
+    {
+        isGrounded = Physics2D.OverlapCircle(checkSol.position, rayonSol, sol);
+    }
+
 
     void Update()
     {
-        horizontalMove = Input.GetAxisRaw("Horizontal") * moveSpeed;
-        if (Input.GetButtonDown("Jump") && controller.isGrounded)
-        {
-            jump = true;
-        }
-    }
+        float x = Input.GetAxis("Horizontal");
 
-    void FixedUpdate()
-    {
-        moveDirection.x = horizontalMove;
-        if (controller.isGrounded)
+        if (isGrounded && Input.GetButtonDown("Jump"))
         {
-            moveDirection.y = 0f;
-            if (jump)
-            {
-                moveDirection.y = jumpForce;
-                jump = false;
-            }
+            rb.AddForce(new Vector2(0,250));
         }
         
-        moveDirection.y -= gravity * Time.fixedDeltaTime;
-        controller.Move(moveDirection * Time.fixedDeltaTime);
-    }
+        
+        if (x > 0)
+        {
+            transform.Translate(x * moveSpeed * Time.deltaTime,0,0);
+            transform.eulerAngles = new Vector2(0,0);
+        }
+        
+        if (x < 0)
+        {
+            transform.Translate(-x * moveSpeed * Time.deltaTime,0,0);
+            transform.eulerAngles = new Vector3(0, 180, 0);
+        }
+    } 
 }
 
