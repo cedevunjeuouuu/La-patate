@@ -3089,10 +3089,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 4
+  isGrounded: 0
   checkSol: {fileID: 403221146}
   sol:
     serializedVersion: 2
     m_Bits: 64
+  timeForJumpAnim: 0
 --- !u!50 &731304417
 Rigidbody2D:
   serializedVersion: 5
@@ -3119,24 +3121,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
---- !u!1001 &754969921
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 160137263}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 26ac42c0fd12a2d419e675bf24739468, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  moveSpeed: 4
-  checkSol: {fileID: 403221146}
-  sol:
-    serializedVersion: 2
-    m_Bits: 64
+  m_Constraints: 4
 --- !u!1 &740500879
 GameObject:
   m_ObjectHideFlags: 0

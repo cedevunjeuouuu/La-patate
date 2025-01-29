@@ -41,7 +41,6 @@ public class PlayerMovement : MonoBehaviour
         if (isGrounded && Input.GetButtonDown("Jump"))
         {
             count = 0;
-            animatorRef.Play("takeOff");
             animatorRef.SetBool("isJumping", true);
             rb.AddForce(new Vector2(0,250));
         }
