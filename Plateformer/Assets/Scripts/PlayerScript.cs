@@ -1,28 +1,46 @@
+using System;
 using UnityEngine;
-
-public class PlayerScript : MonoBehaviour
+[RequireComponent (typeof(CharacterController))]
+public class PlayerMovement : MonoBehaviour
 {
-    [SerializeField] private int moveSpeed;
-    [SerializeField] private int jumpHigh;
     
+    [SerializeField] private float moveSpeed = 5f;
+    [SerializeField] private float jumpForce = 10f;
+    [SerializeField] private float gravity = 9.81f;
+    private float horizontalMove = 0f;
+    private Vector3 moveDirection;
+    private bool jump = false;
+    private CharacterController controller;
+
+    private void Start()
+    {
+        controller = GetComponent<CharacterController>();
+    }
+
     void Update()
     {
-        if (Input.GetKey("d"))
+        horizontalMove = Input.GetAxisRaw("Horizontal") * moveSpeed;
+        if (Input.GetButtonDown("Jump") && controller.isGrounded)
         {
-            Vector3 direction = new Vector3(1,0,0);
-            direction = direction.normalized;
-            GetComponent<Rigidbody2D>().linearVelocity= direction * moveSpeed;
+            jump = true;
         }
-        if (Input.GetKey("q"))
+    }
+
+    void FixedUpdate()
+    {
+        moveDirection.x = horizontalMove;
+        if (controller.isGrounded)
         {
-            Vector3 direction = new Vector3(-1,0,0);
-            direction = direction.normalized;
-            GetComponent<Rigidbody2D>().linearVelocity= direction * moveSpeed;
+            moveDirection.y = 0f;
+            if (jump)
+            {
+                moveDirection.y = jumpForce;
+                jump = false;
+            }
         }
-        if (Input.GetKeyDown("space"))
-        {
-            Vector3 direction = new Vector3(0,jumpHigh,0);
-            GetComponent<Rigidbody2D>().linearVelocity= direction * moveSpeed;
-        }
-    } 
+        
+        moveDirection.y -= gravity * Time.fixedDeltaTime;
+        controller.Move(moveDirection * Time.fixedDeltaTime);
+    }
 }
+
