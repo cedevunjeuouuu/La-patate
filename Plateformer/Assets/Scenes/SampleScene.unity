@@ -3076,7 +3076,24 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1, y: 1.2929966}
   m_EdgeRadius: 0
---- !u!50 &731304413
+--- !u!114 &731304414
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 160137263}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26ac42c0fd12a2d419e675bf24739468, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveSpeed: 4
+  checkSol: {fileID: 403221146}
+  sol:
+    serializedVersion: 2
+    m_Bits: 64
+--- !u!50 &731304417
 Rigidbody2D:
   serializedVersion: 5
   m_ObjectHideFlags: 0
@@ -3103,8 +3120,8 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!114 &731304414
-MonoBehaviour:
+--- !u!1001 &754969921
+PrefabInstance:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -6003,10 +6020,10 @@ PrefabInstance:
       addedObject: {fileID: 731304414}
     - targetCorrespondingSourceObject: {fileID: 3870748326076863347, guid: c589ff4470e5857469bad0859c60d61a, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 731304413}
+      addedObject: {fileID: 731304412}
     - targetCorrespondingSourceObject: {fileID: 3870748326076863347, guid: c589ff4470e5857469bad0859c60d61a, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 731304412}
+      addedObject: {fileID: 731304417}
   m_SourcePrefab: {fileID: 100100000, guid: c589ff4470e5857469bad0859c60d61a, type: 3}
 --- !u!1 &1588815396
 GameObject:
