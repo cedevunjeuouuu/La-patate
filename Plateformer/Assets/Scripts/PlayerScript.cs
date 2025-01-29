@@ -1,28 +1,50 @@
+using System;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerScript : MonoBehaviour
 {
-    [SerializeField] private int moveSpeed;
-    [SerializeField] private int jumpHigh;
-    
+    [SerializeField] private float moveSpeed;
+    private Rigidbody2D rb;
+    private bool isGrounded = false;
+    public Transform checkSol;
+    private float rayonSol = 0.3f;
+    [SerializeField] private LayerMask sol;
+
+
+    private void Start()
+    {
+        rb = GetComponent<Rigidbody2D>();
+        
+    }
+
+
+    private void FixedUpdate()
+    {
+        isGrounded = Physics2D.OverlapCircle(checkSol.position, rayonSol, sol);
+    }
+
+
     void Update()
     {
-        if (Input.GetKey("d"))
+        float x = Input.GetAxis("Horizontal");
+
+        if (isGrounded && Input.GetButtonDown("Jump"))
         {
-            Vector3 direction = new Vector3(1,0,0);
-            direction = direction.normalized;
-            GetComponent<Rigidbody2D>().linearVelocity= direction * moveSpeed;
+            rb.AddForce(new Vector2(0,250));
         }
-        if (Input.GetKey("q"))
+        
+        
+        if (x > 0)
         {
-            Vector3 direction = new Vector3(-1,0,0);
-            direction = direction.normalized;
-            GetComponent<Rigidbody2D>().linearVelocity= direction * moveSpeed;
+            transform.Translate(x * moveSpeed * Time.deltaTime,0,0);
+            transform.eulerAngles = new Vector2(0,0);
         }
-        if (Input.GetKeyDown("space"))
+        
+        if (x < 0)
         {
-            Vector3 direction = new Vector3(0,jumpHigh,0);
-            GetComponent<Rigidbody2D>().linearVelocity= direction * moveSpeed;
+            transform.Translate(-x * moveSpeed * Time.deltaTime,0,0);
+            transform.eulerAngles = new Vector3(0, 180, 0);
         }
     } 
 }
