@@ -18,8 +18,8 @@ public class EnemyFollow : MonoBehaviour
     
     void Update()
     {
-        rb.velocity = new Vector2(0, 0);
-        rb.velocity = new Vector2(alliePos.position.x - gameObject.transform.position.x,
+        rb.linearVelocity = new Vector2(0, 0);
+        rb.linearVelocity = new Vector2(alliePos.position.x - gameObject.transform.position.x,
             alliePos.position.y - gameObject.transform.position.y) * movementSpeed;
     }
 }

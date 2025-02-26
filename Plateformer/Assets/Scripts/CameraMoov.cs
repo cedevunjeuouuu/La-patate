@@ -3,11 +3,14 @@ using UnityEngine;
 
 public class CameraMoov : MonoBehaviour
 {
-    [SerializeField] private Transform target;
+    [SerializeField] public Transform target;
     [SerializeField] private Vector3 offSett;
 
     private void Update()
     {
-        transform.position = target.position + offSett;
+        if (target)
+        {
+            transform.position = target.position + offSett;
+        }
     }
 }
