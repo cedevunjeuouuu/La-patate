@@ -1,51 +1,59 @@
 using System;
-using System.Collections;
-using NUnit.Framework.Constraints;
-using Unity.VisualScripting;
 using UnityEngine;
-public class PlayerMovement : MonoBehaviour
+using Photon.Pun;
+
+public class PlayerMovement : MonoBehaviourPun
 {
     [SerializeField] private float moveSpeed;
     private Rigidbody2D rb;
-    [SerializeField]private bool isGrounded = false;
+    [SerializeField] private bool isGrounded = false;
     public Transform checkSol;
     private float rayonSol = 0.3f;
     [SerializeField] private LayerMask sol;
     private Animator animatorRef;
-    [SerializeField] private float timeForJumpAnim ;
+    [SerializeField] private float timeForJumpAnim;
     private float count;
-
-
 
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         animatorRef = GetComponent<Animator>();
+        if (!photonView.IsMine)
+        {
+            Camera cam = GetComponentInChildren<Camera>();
+            if (cam != null)
+            {
+                cam.gameObject.SetActive(false);
+            }
+            enabled = false;
+        }
     }
-
 
     private void FixedUpdate()
     {
+        if (!photonView.IsMine) return;
+
         isGrounded = Physics2D.OverlapCircle(checkSol.position, rayonSol, sol);
     }
 
-
-    void Update()
+    private void Update()
     {
-        count += 0.001f;
-        if (isGrounded && count > 0.1 )
+        if (!photonView.IsMine) return;
+
+        count += Time.deltaTime;
+
+        if (isGrounded && count > 0.1f)
         {
             animatorRef.SetBool("isJumping", false);
         }
+
         float x = Input.GetAxis("Horizontal");
         if (isGrounded && Input.GetButtonDown("Jump"))
         {
             count = 0;
             animatorRef.SetBool("isJumping", true);
-            rb.AddForce(new Vector2(0,250));
+            rb.AddForce(Vector2.up * 250);
         }
-        
-        
         if (x > 0)
         {
             transform.Translate(x * moveSpeed * Time.deltaTime,0,0);
@@ -65,4 +73,3 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 }
-
