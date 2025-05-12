@@ -28,7 +28,7 @@ public class PlayerMovement : MonoBehaviourPun
             enabled = false;
         }
     }
-
+    
     private void FixedUpdate()
     {
         if (!photonView.IsMine) return;

@@ -5,13 +5,28 @@ using UnityEngine.SceneManagement;
 
 public class NetworkManager : MonoBehaviourPunCallbacks
 {
-    public GameObject characterSelectionUI; // Associe ton UI dans l'inspecteur
+    [SerializeField] private GameObject characterSelectionUI;
+    [SerializeField] private GameObject enemyWinText;
+    [SerializeField] private GameObject playerWinText;
     private string selectedCharacter;
+
+    [SerializeField] GameObject canvasEndGame;
 
     private void Start()
     {
         PhotonNetwork.ConnectUsingSettings();
-        characterSelectionUI.SetActive(false); // Désactive l'UI au départ
+        characterSelectionUI.SetActive(false);
+    }
+    
+    public void Restart()
+    {
+        Time.timeScale = 1;
+        playerWinText.SetActive(false);
+        enemyWinText.SetActive(false);
+        canvasEndGame.SetActive(false);
+        characterSelectionUI.SetActive(true);
+        PhotonNetwork.LeaveRoom();
+        PhotonNetwork.JoinLobby();
     }
 
     public override void OnConnectedToMaster()
@@ -23,17 +38,18 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     public override void OnJoinedLobby()
     {
         Debug.Log("Rejoint le Lobby. Vous pouvez maintenant choisir votre personnage.");
-        characterSelectionUI.SetActive(true); // Active l'UI de sélection de personnage
+        characterSelectionUI.SetActive(true);
     }
 
     public void SetCharacter(string character)
     {
         selectedCharacter = character;
 
-        // Assure-toi d'être bien dans le lobby avant de tenter de rejoindre une salle
+        
         if (PhotonNetwork.InLobby)
         {
             PhotonNetwork.JoinOrCreateRoom("Room1", new RoomOptions { MaxPlayers = 2 }, TypedLobby.Default);
+            characterSelectionUI.SetActive(false);
         }
         else
         {
@@ -49,13 +65,10 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         Vector3 spawnPosition = new Vector3(-7, -3, 0);
         string prefabToSpawn = selectedCharacter == "Player" ? "Player" : "EnemyPlayer";
     
-        // Instanciation du personnage
         GameObject playerObject = PhotonNetwork.Instantiate(prefabToSpawn, spawnPosition, Quaternion.identity);
 
-        // Instanciation de la caméra
         GameObject cameraObject = Instantiate(Resources.Load<GameObject>("CameraPrefab"));
     
-        // Assigner la cible à la caméra
         CameraFollow cameraFollow = cameraObject.GetComponent<CameraFollow>();
         if (cameraFollow != null)
         {
