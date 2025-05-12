@@ -676,6 +676,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   timeForJumpAnim: 0
+  jumpForce: 400
 --- !u!50 &6777356623356128916
 Rigidbody2D:
   serializedVersion: 5
