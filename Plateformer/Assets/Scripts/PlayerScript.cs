@@ -14,6 +14,7 @@ public class PlayerMovement : MonoBehaviourPun
     [SerializeField] private float timeForJumpAnim;
     private float count;
     [SerializeField] private Vector3 spawnPosition = new Vector3(-7, -3, 0);
+    [SerializeField]private float jumpForce;
 
     private void Start()
     {
@@ -57,7 +58,7 @@ public class PlayerMovement : MonoBehaviourPun
         {
             count = 0;
             animatorRef.SetBool("isJumping", true);
-            rb.AddForce(Vector2.up * 250);
+            rb.AddForce(Vector2.up * jumpForce);
         }
         if (x > 0)
         {
