@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
@@ -8,6 +9,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     [SerializeField] private GameObject characterSelectionUI;
     [SerializeField] private GameObject enemyWinText;
     [SerializeField] private GameObject playerWinText;
+    
     private string selectedCharacter;
 
     [SerializeField] GameObject canvasEndGame;
@@ -17,7 +19,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         PhotonNetwork.ConnectUsingSettings();
         characterSelectionUI.SetActive(false);
     }
-    
+
     public void Restart()
     {
         Time.timeScale = 1;

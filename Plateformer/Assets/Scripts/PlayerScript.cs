@@ -13,6 +13,7 @@ public class PlayerMovement : MonoBehaviourPun
     private Animator animatorRef;
     [SerializeField] private float timeForJumpAnim;
     private float count;
+    [SerializeField] private Vector3 spawnPosition = new Vector3(-7, -3, 0);
 
     private void Start()
     {
@@ -27,6 +28,10 @@ public class PlayerMovement : MonoBehaviourPun
             }
             enabled = false;
         }
+    }
+    private void Awake()
+    {
+        transform.position = spawnPosition;
     }
     
     private void FixedUpdate()

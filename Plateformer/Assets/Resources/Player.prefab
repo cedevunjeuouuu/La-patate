@@ -438,6 +438,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   timeForJumpAnim: 0
+  spawnPosition: {x: -2, y: -2.5, z: 0}
 --- !u!61 &132073036583477145
 BoxCollider2D:
   m_ObjectHideFlags: 0
