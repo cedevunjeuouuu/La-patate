@@ -9,7 +9,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     [SerializeField] private GameObject characterSelectionUI;
     [SerializeField] private GameObject enemyWinText;
     [SerializeField] private GameObject playerWinText;
-    
+    [SerializeField] private LevelRendering levelRendering;
     private string selectedCharacter;
 
     [SerializeField] GameObject canvasEndGame;
@@ -22,6 +22,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     public void Restart()
     {
+
         Time.timeScale = 1;
         playerWinText.SetActive(false);
         enemyWinText.SetActive(false);
@@ -34,13 +35,14 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     public override void OnConnectedToMaster()
     {
         PhotonNetwork.JoinLobby();
-        Debug.Log("Connecté au Master Server, en attente de rejoindre le lobby...");
+        Debug.Log("Connecté au Master Server");
     }
 
     public override void OnJoinedLobby()
     {
-        Debug.Log("Rejoint le Lobby. Vous pouvez maintenant choisir votre personnage.");
+        Debug.Log("Rejoint le Lobby");
         characterSelectionUI.SetActive(true);
+        PhotonNetwork.AutomaticallySyncScene = true;
     }
 
     public void SetCharacter(string character)
@@ -51,34 +53,41 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         if (PhotonNetwork.InLobby)
         {
             PhotonNetwork.JoinOrCreateRoom("Room1", new RoomOptions { MaxPlayers = 2 }, TypedLobby.Default);
+            
             characterSelectionUI.SetActive(false);
         }
         else
         {
-            Debug.LogError("Pas encore dans le lobby, impossible de rejoindre une salle !");
+            Debug.LogError("Pas encore dans le lobby");
         }
     }
 
     
     public override void OnJoinedRoom()
     {
-        Debug.Log("Rejoint la salle. Instanciation du personnage.");
+        Debug.Log("Instanciation du personnage.");
 
         Vector3 spawnPosition = new Vector3(-7, -3, 0);
         string prefabToSpawn = selectedCharacter == "Player" ? "Player" : "EnemyPlayer";
-    
+        
         GameObject playerObject = PhotonNetwork.Instantiate(prefabToSpawn, spawnPosition, Quaternion.identity);
 
         GameObject cameraObject = Instantiate(Resources.Load<GameObject>("CameraPrefab"));
     
         CameraFollow cameraFollow = cameraObject.GetComponent<CameraFollow>();
+        
         if (cameraFollow != null)
         {
             cameraFollow.SetTarget(playerObject.transform);
         }
         else
         {
-            Debug.LogError("CameraFollow script manquant sur le prefab de la caméra !");
+            Debug.LogError("CameraFollow script manquant sur le prefab de la caméra");
+        }
+        if (PhotonNetwork.IsMasterClient)
+        {
+            levelRendering.CreateLevel();
+            
         }
     }
 

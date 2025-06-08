@@ -1,18 +1,15 @@
+using Photon.Pun;
 using UnityEngine;
 
 public class LevelRendering : MonoBehaviour
 {
-    [SerializeField] private Chunk[] chunkPrefabs;
+    [SerializeField] private string[] chunkPrefabs;
     [SerializeField] private int numberMaxOfChunk;
     [SerializeField]private Transform FirstPositionLevel;
     [SerializeField]private Transform LevelParent;
+    [SerializeField] private Transform levelEnd;
     private Transform lastEndPoint;
     
-    void Start()
-    {
-        CreateLevel();
-        
-    }
 
     private void DestroyLastLevel()
     {
@@ -23,8 +20,10 @@ public class LevelRendering : MonoBehaviour
     }
    private  void SpawnFirstChunk()
     {
-        Chunk firstChunk = Instantiate(chunkPrefabs[0], LevelParent);
-        Transform startPoint = firstChunk.StartPoint;
+        GameObject firstChunk = PhotonNetwork.Instantiate(chunkPrefabs[0],FirstPositionLevel.position,new Quaternion());
+        Chunk chunk = firstChunk.GetComponent<Chunk>();
+        firstChunk.transform.localScale = Vector3.one;
+        Transform startPoint = chunk.StartPoint;
         if (startPoint == null)
         {
             Debug.LogWarning("First chunk is missing StartPoint");
@@ -35,7 +34,7 @@ public class LevelRendering : MonoBehaviour
         
         firstChunk.transform.position += offset;
         
-        lastEndPoint = firstChunk.endPoint;
+        lastEndPoint = chunk.endPoint;
     }
 
     public void CreateLevel()
@@ -44,17 +43,19 @@ public class LevelRendering : MonoBehaviour
         SpawnFirstChunk();
         for (int i = 0; i < numberMaxOfChunk; i++)
         {
-            SpawnNextChunk();
+            SpawnNextChunk(i);
         }
-        
     }
 
-    private void SpawnNextChunk()
+    private void SpawnNextChunk(int chunkNumber)
     {
+        
         int index = Random.Range(0, chunkPrefabs.Length);
-        Chunk newChunk = Instantiate(chunkPrefabs[index],LevelParent);
-
-        Transform startPoint = newChunk.StartPoint;
+        GameObject newChunk = PhotonNetwork.Instantiate(chunkPrefabs[index],FirstPositionLevel.position,new Quaternion());
+        Chunk chunk = newChunk.GetComponent<Chunk>();
+        
+        
+        Transform startPoint = chunk.StartPoint;
         if (startPoint == null || lastEndPoint == null)
         {
             Debug.LogWarning("Chunk is missing StartPoint or last chunk is missing EndPoint");
@@ -63,8 +64,12 @@ public class LevelRendering : MonoBehaviour
         
         Vector3 offset = lastEndPoint.position - startPoint.position;
         
+        
+        
         newChunk.transform.position += offset;
         
-        lastEndPoint = newChunk.endPoint;
+        lastEndPoint = chunk.endPoint;
+        
+        levelEnd.position = lastEndPoint.position;
     }
 }

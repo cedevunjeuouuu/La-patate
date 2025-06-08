@@ -18,6 +18,7 @@ public class CameraFollow : MonoBehaviour
     // Fonction pour définir dynamiquement la cible
     public void SetTarget(Transform newTarget)
     {
+        Debug.Log("requin");
         target = newTarget;
     }
 }
